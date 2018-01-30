@@ -10,11 +10,11 @@ import com.example.ardin.androidsimpleproject.R.id.textView_video_title
 /**
  * Created by ardin on 29/01/18.
  */
-class MainAdapter : RecyclerView.Adapter<CustomViewHolder>() {
+class MainAdapter(val homeFeed: HomeFeed) : RecyclerView.Adapter<CustomViewHolder>() {
     val videoList = listOf<String>("Jumanji", "Dilan")
 
     override fun getItemCount(): Int {
-        return videoList.size
+        return homeFeed.videos.count()
     }
 
     override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): CustomViewHolder {
@@ -23,8 +23,11 @@ class MainAdapter : RecyclerView.Adapter<CustomViewHolder>() {
     }
 
     override fun onBindViewHolder(holder: CustomViewHolder?, position: Int) {
+        val video = homeFeed.videos.get(position)
+
         val data = holder?.view?.findViewById<TextView>(textView_video_title)
-        data?.text = videoList[position]
+        data?.text = video?.name
+
     }
 }
 
