@@ -8,7 +8,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import com.example.ardin.androidsimpleproject.R.id.*
 import com.squareup.picasso.Picasso
-
+import android.content.Intent
 /**
  * Created by ardin on 29/01/18.
  */
@@ -43,5 +43,11 @@ class MainAdapter(val homeFeed: HomeFeed) : RecyclerView.Adapter<CustomViewHolde
 }
 
 class CustomViewHolder(val view: View) : RecyclerView.ViewHolder(view) {
+    init {
+        view.setOnClickListener {
+            val intent = Intent(view.context, CourseDetailActivity::class.java)
 
+            view.context.startActivity(intent)
+        }
+    }
 }
