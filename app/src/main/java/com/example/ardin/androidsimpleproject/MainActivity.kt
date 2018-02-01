@@ -33,7 +33,6 @@ class MainActivity : AppCompatActivity() {
 
             override fun onResponse(call: Call?, response: Response?) {
                 val body = response?.body()?.string()
-                println(body)
 
                 val gson = GsonBuilder().create()
 
