@@ -11,6 +11,11 @@ import com.google.gson.GsonBuilder
 import kotlinx.android.synthetic.main.activity_main.*
 import okhttp3.*
 import java.io.IOException
+import android.content.Intent
+import android.widget.ImageView
+import android.widget.TextView
+import com.example.ardin.androidsimpleproject.R.id.*
+import com.squareup.picasso.Picasso
 
 class CourseDetailActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -19,7 +24,7 @@ class CourseDetailActivity : AppCompatActivity() {
 
 //        recyclerView_main.setBackgroundColor(Color.DKGRAY)
         recyclerView_main.layoutManager = LinearLayoutManager(this)
-        recyclerView_main.adapter = CourseDetailAdapter()
+//        recyclerView_main.adapter = CourseDetailAdapter()
 
         //change navbar title
         val title = intent.getStringExtra(CustomViewHolder.VIDEO_TITLE_KEY)
@@ -46,6 +51,9 @@ class CourseDetailActivity : AppCompatActivity() {
 
                 val courseLesson = gson.fromJson(body, Array<CourseLesson>::class.java)
 
+                runOnUiThread {
+                    recyclerView_main.adapter = CourseDetailAdapter(courseLesson)
+                }
             }
 
         })
@@ -54,28 +62,40 @@ class CourseDetailActivity : AppCompatActivity() {
 
 }
 
-private class CourseDetailAdapter : RecyclerView.Adapter<CourseDetailViewHolder>() {
+private class CourseDetailAdapter(val courseLesson: Array<CourseLesson>) : RecyclerView.Adapter<CourseDetailViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): CourseDetailViewHolder {
         val layoutInflater = LayoutInflater.from(parent?.context)
         val customView = layoutInflater.inflate(R.layout.course_detail_row, parent, false)
 
-//        val blueView = View(parent?.context)
-//        blueView.setBackgroundColor(Color.BLUE)
-//        blueView.minimumHeight = 50
         return CourseDetailViewHolder(customView)
     }
 
     override fun getItemCount(): Int {
-        return 5
+        return courseLesson.size
     }
 
     override fun onBindViewHolder(holder: CourseDetailViewHolder?, position: Int) {
+        val courseLesson = courseLesson.get(position)
 
+        val courseTitle = holder?.customView?.findViewById<TextView>(textView_course_lesson_title)
+        courseTitle?.text = courseLesson.name
+
+        val duration = holder?.customView?.findViewById<TextView>(textView_duration)
+        duration?.text = courseLesson.duration
+
+        val thumbnail = holder?.customView?.findViewById<ImageView>(imageView_course_lesson_thumbnail)
+
+        Picasso.with(holder?.customView?.context).load(courseLesson.imageUrl).into(thumbnail)
     }
 
 
 }
 
 private class CourseDetailViewHolder(val customView: View) : RecyclerView.ViewHolder(customView) {
-
+    init {
+        customView.setOnClickListener {
+            val intent = Intent(customView.context, CourseLessonActivity::class.java)
+            customView.context.startActivity(intent)
+        }
+    }
 }
